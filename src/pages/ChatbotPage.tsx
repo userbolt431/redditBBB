@@ -185,6 +185,26 @@ const ChatbotPage: React.FC = () => {
           )}
         </div>
 
+        {/* Chat Input */}
+        <div className="bg-white border-b border-slate-200 p-4">
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Type your message..."
+              className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              onClick={handleSendMessage}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Send size={20} />
+            </button>
+          </div>
+        </div>
+
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {messages.map(message => (
@@ -203,26 +223,6 @@ const ChatbotPage: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Chat Input */}
-        <div className="bg-white border-t border-slate-200 p-4">
-          <div className="flex items-center gap-4">
-            <input
-              type="text"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="Type your message..."
-              className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <button
-              onClick={handleSendMessage}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Send size={20} />
-            </button>
-          </div>
         </div>
       </div>
 
