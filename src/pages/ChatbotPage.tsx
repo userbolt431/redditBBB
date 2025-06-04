@@ -66,6 +66,7 @@ const topics = [
 
 const ChatbotPage: React.FC = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [selectedAbility, setSelectedAbility] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
 
@@ -86,7 +87,7 @@ const ChatbotPage: React.FC = () => {
     setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `This is a response from ${selectedAgent?.name || 'the bot'} about ${selectedAgent?.abilities[0] || 'general topics'}`,
+        text: `This is a response from ${selectedAgent?.name || 'the bot'} about ${selectedAbility || selectedAgent?.abilities[0] || 'general topics'}`,
         sender: 'bot',
         timestamp: new Date()
       };
@@ -97,42 +98,45 @@ const ChatbotPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex">
       {/* Left Sidebar - AI Agents */}
-      <div className="w-64 bg-white border-r border-slate-200 flex flex-col py-6">
+      <div className="w-96 bg-white border-r border-slate-200 flex flex-col py-6">
         <h2 className="px-6 text-lg font-semibold text-slate-800 mb-4">AI Agents</h2>
         <div className="space-y-4 px-4">
           {agents.map(agent => (
             <div key={agent.id} className="space-y-2">
-              <button
-                onClick={() => setSelectedAgent(agent)}
-                className={`w-full p-3 rounded-lg flex items-center gap-3 transition-colors ${
-                  selectedAgent?.id === agent.id 
-                    ? `bg-${agent.color}-50 border-2 border-${agent.color}-500` 
-                    : 'hover:bg-slate-50 border-2 border-transparent'
-                }`}
-              >
-                <img 
-                  src={agent.avatar} 
-                  alt={agent.name}
-                  className="w-12 h-12 rounded-full"
-                />
-                <div className="text-left">
-                  <div className="font-medium text-slate-800">{agent.name}</div>
-                  <div className="text-sm text-slate-500">{agent.abilities[0]}</div>
-                </div>
-              </button>
-              
-              {selectedAgent?.id === agent.id && (
-                <div className="pl-16 space-y-1">
-                  {agent.abilities.map((ability, index) => (
-                    <div 
-                      key={index}
-                      className={`text-sm py-1 px-3 rounded-full bg-${agent.color}-50 text-${agent.color}-700 inline-block mr-2 mb-2`}
-                    >
-                      {ability}
+              <div className={`p-3 rounded-lg transition-colors ${
+                selectedAgent?.id === agent.id 
+                  ? `bg-${agent.color}-50 border-2 border-${agent.color}-500` 
+                  : 'hover:bg-slate-50 border-2 border-transparent'
+              }`}>
+                <div className="flex items-center gap-3">
+                  <img 
+                    src={agent.avatar} 
+                    alt={agent.name}
+                    className="w-12 h-12 rounded-full"
+                  />
+                  <div className="flex-1">
+                    <div className="font-medium text-slate-800">{agent.name}</div>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {agent.abilities.map((ability) => (
+                        <button
+                          key={ability}
+                          onClick={() => {
+                            setSelectedAgent(agent);
+                            setSelectedAbility(ability);
+                          }}
+                          className={`text-xs px-2 py-1 rounded-full transition-colors ${
+                            selectedAgent?.id === agent.id && selectedAbility === ability
+                              ? `bg-${agent.color}-500 text-white`
+                              : `bg-${agent.color}-100 text-${agent.color}-700 hover:bg-${agent.color}-200`
+                          }`}
+                        >
+                          {ability}
+                        </button>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>
@@ -151,7 +155,7 @@ const ChatbotPage: React.FC = () => {
               />
               <div>
                 <div className="font-medium text-slate-800">{selectedAgent.name}</div>
-                <div className="text-sm text-slate-500">{selectedAgent.abilities[0]}</div>
+                <div className="text-sm text-slate-500">{selectedAbility || selectedAgent.abilities[0]}</div>
               </div>
             </div>
           ) : (
